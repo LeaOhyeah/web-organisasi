@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('staff', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->foreign()->constrained('users')->onDelete('set null');
+            $table->string('code')->unique()->comment('merge user_id, position and generation');
             $table->string('position');
             $table->boolean('is_active')->default(true);
             $table->integer('generation');

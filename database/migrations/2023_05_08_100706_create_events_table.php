@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
+            $table->string('code')->unique()->comment('merge title, start_date and end_date');
             $table->string('description')->nullable();
             $table->string('color');
             $table->date('start_date');

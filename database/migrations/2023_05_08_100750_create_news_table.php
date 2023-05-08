@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('news', function (Blueprint $table) {
+            $table->unique(['title', 'uploaded_by']); // unique child constraints(users)
             $table->uuid('id')->primary();
             $table->uuid('uploaded_by')->foreign()->constrained('users')->onDelete('set null');
             $table->uuid('category_id')->foreign()->constrained('categories')->onDelete('set null');
