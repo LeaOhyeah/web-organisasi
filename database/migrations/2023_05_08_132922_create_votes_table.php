@@ -14,11 +14,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('votes', function (Blueprint $table) {
-            $table->unique(['user_id', 'poll_id']); // unique child constraints(options)
             $table->uuid('id')->primary();
             $table->uuid('option_id')->foreign()->constrained('options');
             $table->uuid('poll_id')->foreign()->constrained('polls');
             $table->uuid('user_id')->foreign()->constrained('users')->onDelete('set null');
+            $table->string('code')->unique()->comment('merge user_id and poll_id');
             $table->timestamps();
         });
     }

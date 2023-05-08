@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('options', function (Blueprint $table) {
-            $table->unique(['title', 'poll_id']); // unique child constraints(polls)
             $table->uuid('id')->primary();
             $table->uuid('poll_id')->foreign()->constrained('polls');
+            $table->string('code')->unique()->comment('merge title and poll_id');
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
