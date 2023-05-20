@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('polls', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id')->foreign()->constrained('users')->onDelete('set null');
-            $table->string('code')->nullable(); // like passwords to participate in private polls (used during voting / insert vote)
+            $table->string('password')->nullable(); // like passwords to participate in private polls (used during voting / insert vote)
             $table->string('title')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
