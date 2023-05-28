@@ -16,26 +16,26 @@
         <li>
             <div class="iocn-link">
                 <a href="#">
-                    <i class="bx bx-grid-alt"></i>
+                    <i class='bx bx-news'></i>
                     <span class="link_name">News</span>
                 </a>
                 <i class="bx bxs-chevron-down arrow"></i>
             </div>
             <ul class="sub-menu">
-                <li><a class="link_name" href="">News</a></li>
-                <li><a href="/dashboard/news/news/index">News</a></li>
-                <li><a href="/dashboard/news/categories/index">Categories</a></li>
+                <li><a class="link_name">News</a></li>
+                <li><a href="{{ route('news.index') }}">News</a></li>
+                <li><a href="{{ route('category.index') }}">Categories</a></li>
             </ul>
         </li>
-        
+
         <li>
-            <a href="#">
-                <i class="bx bx-grid-alt"></i>
+            <a href="{{ route('event.index') }}">
+                <i class='bx bx-calendar'></i>
                 {{-- <i class="bx bx-pie-chart-alt-2"></i> --}}
-                <span class="link_name">Category</span>
+                <span class="link_name">Event</span>
             </a>
             <ul class="sub-menu blank">
-                <li><a class="link_name" href="#">Category</a></li>
+                <li><a class="link_name" href="{{ route('event.index') }}">Event</a></li>
             </ul>
         </li>
         <li>
@@ -48,7 +48,7 @@
                 <li><a class="link_name" href="#">Category</a></li>
             </ul>
         </li>
-        
+
         <li>
             <a href="#">
                 <i class="bx bx-grid-alt"></i>

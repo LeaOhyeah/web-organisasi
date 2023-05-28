@@ -1,5 +1,12 @@
 @extends('template.main')
 @section('content')
+    <style>
+        .color-circle {
+            width: 20px;
+            height: 20px;
+            border-width: 2px;
+        }
+    </style>
     @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
             {{ session('success') }}
@@ -17,7 +24,7 @@
 
         <div class="card-header bg-primary">
             <div class="d-flex justify-content-between">
-                <h2 class="text-light">Categories</h2>
+                <h2 class="text-light">Events</h2>
                 <button type="button" class="btn btn-primary fw-bold" data-bs-toggle="modal"
                     data-bs-target="#exampleModal">
                     Add <i class="fas fa-add"></i>
@@ -30,19 +37,29 @@
                 <thead class="bg-primary border-dark text-light">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Edited By</th>
+                        <th>Title</th>
+                        <th>Start-End</th>
+                        <th>Describe</th>
                         <th>Updated at</th>
+                        <th>Edited By</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($categories as $category)
+                    @foreach ($events as $event)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td class="name">{{ $category->name }}</td>
-                            <td>{{ $category->userCategory->name }}</td>
-                            <td>{{ $category->updated_at }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="color-circle border rounded-circle"
+                                        style="background-color: {{ $event->color }};"></div>
+                                    <div class="ms-2">{{ $event->title }}</div>
+                                </div>
+                            </td>
+                            <td>{{ $event->start_date }} <br> {{ $event->end_date }}</td>
+                            <td>{{ $event->description }}</td>
+                            <td>{{$event->updated_at}}</td>
+                            <td>{{ $event->userEvent->name }}</td>
                             <td class="text-center">
                                 <a data-bs-toggle="modal" class="editData mx-2" data-bs-target="#edit">
                                     <i class="fa fa-edit fa-lg" style="color:#0055ff"></i>
@@ -53,7 +70,7 @@
                                 <a data-bs-toggle="modal" class="deleteData mx-2" data-bs-target="#delete">
                                     <i class="fa fa-trash fa-lg" style="color:#1500ff"></i>
                                 </a>
-                                @include('section.modal_category')
+                                @include('section.modal_event')
                             </td>
                         </tr>
                     @endforeach
@@ -68,16 +85,37 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-light">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New Category</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Event</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('category.store') }}" method="post">
+                    <form action="{{ route('event.store') }}" method="post">
                         @csrf
-                        <div class="form-floating mx-2">
-                            <input type="text" name="name" id="floatingName" class="form-control" placeholder="name">
-                            <label class="text-secondary" for="floatingName">Category Name</label>
+                        <div class="row">
+                            <div class="col-md-10 mb-3">
+                                <label class="form-label" for="floatingTitle">Title</label>
+                                <input type="text" name="title" id="floatingTitle" class="form-control"
+                                    placeholder="Title" required>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="exampleColorInput" class="form-label">Color</label>
+                                <input type="color" name="color" class="form-control form-control-color"
+                                    id="exampleColorInput" value="#1500ff" title="Choose your color" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" name="start_date" class="form-control" id="startDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" name="end_date" class="form-control" id="endDate" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="description" class="form-label mb-1 mt-4">Description (Optional)</label>
+                                <textarea type="text" name="description" id="description" class="form-control"></textarea>
+                            </div>
                         </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
@@ -91,23 +129,15 @@
 
 
     <script>
-        // get data edit
-        // $(document).on('click', '.editData', function() {
-        //     var _this = $(this).parents('tr');
-        //     $('#e_id').val(_this.find('.id').text());
-        //     $('#e_name').val(_this.find('.name').text());
-        // });
-        // get data delete
-        // $(document).on('click', '.deleteData', function() {
-        //     var _this = $(this).parents('tr');
-        //     $('#d_id').val(_this.find('.id').text());
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
 
-        //     var element = document.getElementById('d_name'); // Mendapatkan elemen div dengan id
-        //     var data = _this.find('.name').text();
-        //     var message = 'Are you sure to delete ';
-        //     var symbol = ' ?';
-        //     element.textContent = message + data + symbol; // Menampilkan teks ke dalam elemen div
-        // });
+        // Dapatkan tanggal hari ini
+        const today = new Date().toISOString().split('T')[0];
+
+        // Set atribut 'max' pada elemen input tanggal
+        startDate.setAttribute('min', today);
+        endDate.setAttribute('min', today);
 
         // setting DataTable
         $(document).ready(function() {
@@ -149,18 +179,26 @@
                     {
                         responsivePriority: 1,
                         targets: 1,
-                    }, // Kolom name
+                    }, // Kolom title
                     {
-                        responsivePriority: 2,
+                        responsivePriority: 1,
                         targets: 2,
-                    }, // Kolom updated_at
+                    }, // Kolom start
                     {
                         responsivePriority: 2,
                         targets: 3,
+                    }, // Kolom end
+                    {
+                        responsivePriority: 2,
+                        targets: 4,
+                    }, // Kolom desc
+                    {
+                        responsivePriority: 2,
+                        targets: 5,
                     }, // Kolom edited_by
                     {
                         responsivePriority: 1,
-                        targets: 4,
+                        targets: 6,
                         className: 'no-print no-export',
                     }, // Kolom action
                 ],

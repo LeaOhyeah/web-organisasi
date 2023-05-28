@@ -98,7 +98,7 @@ class NewsFeatureController extends Controller
         if (News::destroy($id)) {
             return back()->with('success', 'Data deleted successfully!');
         } else {
-            return back()->with('error', 'Error! Failed to delete the data.');
+            return back()->with('error', 'Error! Failed to delete the data');
         }
     }
     // #### End News Function ####
@@ -116,7 +116,7 @@ class NewsFeatureController extends Controller
     {
         $unique = Category::where('name', $request->name)->first();
         if ($unique) {
-            dd($request->name);
+            return redirect('/dashboard/news/categories/index')->with('error', "Error! Data already exists");
         } else {
             $validateData = $request->validate([
                 'name' => 'required|unique:categories|max:20',
@@ -127,7 +127,7 @@ class NewsFeatureController extends Controller
             if (Category::create($validateData)) {
                 return redirect('/dashboard/news/categories/index')->with('success', "Data added successfully!");
             } else {
-                return redirect('/dashboard/news/categories/index')->with('error', "Error! Failed to add the data.");
+                return redirect('/dashboard/news/categories/index')->with('error', "Error! Failed to add the data");
             }
         }
 
@@ -141,17 +141,23 @@ class NewsFeatureController extends Controller
 
         if ($isChange == false) {
             return back()->with('success', 'Nothing to update');
-        } else if ($duplicate == null) {
+        }
+        
+        if ($duplicate == null) {
             $validateData = $request->validate([
                 'id' => 'required',
                 'name' => 'required|max:20',
             ]);
             $validateData['edited_by'] = '05acd69d-9774-4e49-becb-437fcc703df9';
-            Category::where('id', $request->id)->update($validateData);
-            return back()->with('success', 'Data updated successfully!');
-        } else {
-            return back()->with('error', 'Error! Data already exists');
+
+            if (Category::where('id', $request->id)->update($validateData)) {
+                return back()->with('success', 'Data updated successfully!');
+            }
+            return back()->with('error', "Error! Something went wrong");
         }
+        
+        return back()->with('error', 'Error! Data already exists');
+
     }
 
     public function categoryDelete(Request $request)
@@ -159,7 +165,7 @@ class NewsFeatureController extends Controller
         if (Category::destroy($request->id)) {
             return back()->with('success', 'Data deleted successfully!');
         } else {
-            return back()->with('error', 'Error! Failed to delete the data.');
+            return back()->with('error', 'Error! Failed to delete the data');
         }
     }
 

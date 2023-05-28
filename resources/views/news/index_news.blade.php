@@ -74,13 +74,13 @@
                 buttons: [{
                         extend: "csv",
                         exportOptions: {
-                            columns: ":visible",
+                            columns: ":visible:not(.no-export)",
                         },
                     },
                     {
                         extend: "print",
                         exportOptions: {
-                            columns: ":visible",
+                            columns: ":visible:not(.no-print)",
                         },
                     },
                     {
@@ -123,6 +123,7 @@
                     {
                         responsivePriority: 1,
                         targets: 5,
+                        className: 'no-print no-export',
                     }, // Kolom action
                 ],
             });

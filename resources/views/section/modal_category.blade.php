@@ -32,19 +32,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('category.update') }}" method="post">
-                    @csrf
-                    <label class="text-secondary" for="e_name">Category Name</label>
-                    <input value="{{ $category->name }}" type="text" name="name" id="e_name"
-                    class="form-control">
-                    <input value="{{ $category->id }}" type="hidden" name="id" id="e_id"
-                        class="form-control">
+                <div class="text-start">
+                    <form action="{{ route('category.update') }}" method="post">
+                        @csrf
+                        <label class="text-secondary" for="e_name">Category Name</label>
+                        <input value="{{ $category->name }}" type="text" name="name" id="e_name"
+                            class="form-control">
+                        <input value="{{ $category->id }}" type="hidden" name="id" id="e_id"
+                            class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary"> Update </button>
+                </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary"> Update </button>
-            </div>
-            </form>
+
         </div>
     </div>
 </div>
